@@ -5,7 +5,7 @@
 
 using namespace std;
 
-// UNIT
+// UNIT - Component
 class Unit
 {
 protected:
@@ -20,7 +20,7 @@ public:
 		return "Unit: " + name + " " + to_string(Attack());
 	}
 
-	virtual int Attack()
+	virtual int Attack() 
 	{
 		return attack;
 	}
@@ -28,7 +28,7 @@ public:
 	virtual ~Unit() {}
 };
 
-// UNITS
+// UNITS - Leafs
 class InfantryUnit : public Unit
 {
 public:
@@ -86,4 +86,37 @@ public:
 	}
 };
 
+// Units Group - Composite
+class UnitGroup : public Unit
+{
+	vector<Unit*> group;
+public:
+	UnitGroup(string name) : Unit{ name } {};
 
+	int Attack() override
+	{
+		int attack{};
+		for (auto unit : group)
+			attack += unit->Attack();
+		return attack;
+	}
+
+	string ToString() override
+	{
+		string str = Unit::ToString() + "\n";
+		for (auto unit : group)
+			str += "\t" + unit->ToString()
+						+ "\n";
+		return str;
+	}
+
+	void Add(Unit* unit)
+	{
+		group.push_back(unit);
+	}
+
+	void Remove(int index)
+	{
+		group.erase(group.begin() + index);
+	}
+};
